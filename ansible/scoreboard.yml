@@ -1,0 +1,243 @@
+---
+- name: Install Scoreboard Application
+  hosts: localhost
+  connection: local
+  become: yes
+
+  vars:
+    ## UPDATE THESE VALUES
+    mysql_root_password: "my_secret_password"
+    scoreboard_sql_password: "my_secret_password"
+    ##
+
+    scoreboard_dir: "{{ [scoreboard_base, scoreboard_directory] | path_join }}/scoreboard"
+    streaming_dir: "{{ [scoreboard_base, scoreboard_directory] | path_join }}/streaming"
+    scoreboard_logs_path: "{{ [scoreboard_base, 'logs'] | path_join }}"
+    RUBY_VERSION: "3.2.6"
+    RAILS_ENV: "{{ 'development' if development else 'production' }}"
+    RAILS_LOG_LEVEL: "debug"
+
+  tasks:
+    - name: Install Playbook Required Pip Packages
+      pip:
+        name:
+          - docker
+          - PyMySQL
+
+    - name: Check if scoreboard directory exists
+      stat:
+        path: "{{ scoreboard_dir }}"
+      register: scoreboard_dir_check
+
+    - name: Check if scoreboard stream directory exists
+      stat:
+        path: "{{ streaming_dir }}"
+      register: scoreboard_stream_dir_check
+
+    - name: Ensure scoreboard directory exists
+      fail:
+        msg: "Scoreboard '{{ scoreboard_dir }}' or stream '{{ streaming_dir }}' does not exist"
+      when: not scoreboard_dir_check.stat.exists or not scoreboard_stream_dir_check.stat.exists
+
+    - name: Create scoreboard logs directory
+      file:
+        path: "{{ scoreboard_logs_path }}/"
+        state: directory
+        owner: "{{ scoreboard_user }}"
+        mode: "0775"
+
+    - name: Install rbenv from GitHub
+      become_user: "{{ scoreboard_user }}"
+      git:
+        repo: https://github.com/rbenv/rbenv.git
+        dest: ~/.rbenv
+        version: master
+        update: yes
+
+    - name: Install ruby-build plugin for rbenv
+      become_user: "{{ scoreboard_user }}"
+      git:
+        repo: https://github.com/rbenv/ruby-build.git
+        dest: ~/.rbenv/plugins/ruby-build
+        version: master
+        update: yes
+
+    - name: Update bashrc for rbenv
+      become_user: "{{ scoreboard_user }}"
+      blockinfile:
+        dest: ~/.bashrc
+        block: |
+          export PATH="$HOME/.rbenv/bin:$PATH"
+          eval "$(rbenv init -)"
+        marker: '# {mark} ANSIBLE MANAGED RBENV Config'
+
+    - name: Install Ruby
+      become_user: "{{ scoreboard_user }}"
+      shell: |
+        rbenv install {{ RUBY_VERSION }}
+        rbenv global {{ RUBY_VERSION }}
+      environment:
+        PATH: "{{ ansible_env.PATH }}:/home/{{ scoreboard_user }}/.rbenv/bin"
+        RBENV_ROOT: "/home/{{ scoreboard_user }}/.rbenv"
+
+    - name: Setup Ruby Gems
+      become_user: "{{ scoreboard_user }}"
+      shell: |
+        rbenv exec gem install bundler
+      environment:
+        PATH: "{{ ansible_env.PATH }}:/home/{{ scoreboard_user }}/.rbenv/bin"
+        RBENV_ROOT: "/home/{{ scoreboard_user }}/.rbenv"
+
+    - name: Install Scoreboard Ruby Gems
+      become_user: "{{ scoreboard_user }}"
+      shell: |
+        cd {{ scoreboard_dir }} && rbenv exec bundle install
+      environment:
+        PATH: "{{ ansible_env.PATH }}:/home/{{ scoreboard_user }}/.rbenv/bin"
+        RBENV_ROOT: "/home/{{ scoreboard_user }}/.rbenv"
+
+    - name: Install Streaming Ruby Gems
+      become_user: "{{ scoreboard_user }}"
+      shell: |
+        cd {{ streaming_dir }} && rbenv exec bundle install
+      environment:
+        PATH: "{{ ansible_env.PATH }}:/home/{{ scoreboard_user }}/.rbenv/bin"
+        RBENV_ROOT: "/home/{{ scoreboard_user }}/.rbenv"
+
+    - name: Install Scoreboard Yarn
+      become_user: "{{ scoreboard_user }}"
+      shell: |
+        cd {{ scoreboard_dir }} && yarn install
+      environment:
+        PATH: "{{ ansible_env.PATH }}"
+
+    - name: Create scoreboard dependencies directory
+      file:
+        path: "{{ scoreboard_base }}/deps"
+        state: directory
+        owner: root
+        mode: '0755'
+
+    - name: Copy Docker Compose Prod file
+      copy:
+        src: "docker-compose.yml"
+        dest: "{{ scoreboard_base }}/deps/docker-compose.yml"
+        owner: root
+        mode: '0644'
+      when: not development
+
+    - name: Copy Docker Compose Dev file
+      copy:
+        src: "docker-compose.dev.yml"
+        dest: "{{ scoreboard_base }}/deps/docker-compose.yml"
+        owner: root
+        mode: '0644'
+      when: development
+
+    - name: Create Docker .env file
+      copy:
+        dest: "{{ scoreboard_base }}/deps/.env"
+        content: |
+          MYSQL_ROOT_PASSWORD={{ mysql_root_password }}
+        owner: root
+        mode: '0600'
+
+    - name: Run docker-compose
+      community.docker.docker_compose_v2:
+        project_src: "{{ scoreboard_base }}/deps"
+        state: present
+
+    - name: Wait for MySQL service
+      wait_for:
+        host: localhost
+        port: 3306
+        state: started
+        delay: 10
+        timeout: 300
+
+    - name: Copy SQL script template
+      template:
+        src: "templates/db_setup.sql.j2"
+        dest: "{{ scoreboard_base }}/deps/db_setup.sql"
+        mode: 0600
+
+    - name: Run SQL script against the database
+      mysql_db:
+        login_user: root
+        login_password: "{{ mysql_root_password }}"
+        login_host: "127.0.0.1"
+        login_port: 3306
+        name: all
+        state: import
+        target: "{{ scoreboard_base }}/deps/db_setup.sql"
+
+    - name: Copy Nginx configuration template
+      template:
+        src: "templates/scoreboard.nginx.j2"
+        dest: "/etc/nginx/sites-available/scoreboard"
+        mode: 0644
+
+    - name: Remove default Nginx configuration
+      file:
+        path: /etc/nginx/sites-enabled/default
+        state: absent
+
+    - name: Create symlink for Scoreboard Nginx configuration
+      file:
+        src: /etc/nginx/sites-available/scoreboard
+        dest: /etc/nginx/sites-enabled/scoreboard
+        state: link
+
+    - name: Copy Meta Unit
+      template:
+        src: "templates/scoreboard.service.j2"
+        dest: "/etc/systemd/system/scoreboard.service"
+
+    - name: Copy Scoreboard Unit
+      template:
+        src: "templates/scoreboard-main.service.j2"
+        dest: "/etc/systemd/system/scoreboard-main.service"
+
+    - name: Copy Stream Unit
+      template:
+        src: "templates/scoreboard-stream.service.j2"
+        dest: "/etc/systemd/system/scoreboard-stream.service"
+
+    - name: Copy Worker Unit
+      template:
+        src: "templates/scoreboard-worker.service.j2"
+        dest: "/etc/systemd/system/scoreboard-worker.service"
+
+    - name: Create Systemd Env Directory
+      file:
+        path: "/etc/scoreboard/"
+        state: directory
+        owner: root
+        mode: '0755'
+
+    - name: Copy Systemd Env File
+      template:
+        src: "templates/scoreboard.env.j2"
+        dest: "/etc/scoreboard/env"
+
+    - name: Setup logrotate
+      template:
+        src: logrotate.j2
+        dest: /etc/logrotate.d/scoreboard.conf
+        owner: root
+        group: root
+        mode: '0644'
+
+    - name: Reload systemd daemon
+      systemd:
+        daemon_reload: yes
+
+    - name: Enable scoreboard services
+      systemd:
+        name: "{{ item }}"
+        enabled: yes
+      with_items:
+        - scoreboard
+        - scoreboard-main
+        - scoreboard-stream
+        - scoreboard-worker

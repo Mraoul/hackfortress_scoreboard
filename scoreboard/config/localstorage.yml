@@ -1,0 +1,8 @@
+development:
+  directory: <%= Rails.root.join('storage') %>
+
+test:
+  directory: <%= Rails.root.join('test_storage') %>
+
+production:
+  directory: "/opt/files"

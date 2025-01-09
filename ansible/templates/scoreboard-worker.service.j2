@@ -1,0 +1,20 @@
+[Unit]
+Description=Scoreboard Sneakers Worker
+PartOf=scoreboard.service
+After=scoreboard.service
+
+[Service]
+Type=simple
+User={{ scoreboard_user }}
+KillSignal=SIGINT
+WorkingDirectory={{ scoreboard_dir }}
+EnvironmentFile=/etc/scoreboard/env
+Environment="WORKERS=Tf2Worker"
+ExecStart=/home/{{ scoreboard_user }}/.rbenv/bin/rbenv exec bundle exec rails sneakers:run
+StandardOutput=append:{{ scoreboard_logs_path }}/scoreboard-worker.log
+StandardError=append:{{ scoreboard_logs_path }}/scoreboard-worker.log
+TimeoutSec=15
+Restart=always
+
+[Install]
+WantedBy=scoreboard.service

@@ -1,0 +1,5 @@
+game1:
+  singleton_guard: 0
+  live: round1
+  ready: round1
+  automated: false

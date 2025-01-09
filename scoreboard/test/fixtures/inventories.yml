@@ -1,0 +1,15 @@
+
+inventory1:
+  participant: participant1
+  item: item1
+  quantity: 9999
+
+inventory2:
+  participant: participant2
+  item: item1
+  quantity: 9999
+
+inventory3:
+  participant: participant3
+  item: item1
+  quantity: 9998

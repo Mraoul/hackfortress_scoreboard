@@ -1,0 +1,135 @@
+---
+- name: Install Scoreboard Application PreFlight
+  hosts: localhost
+  connection: local
+  become: yes
+
+  tasks:
+    - name: Create scoreboard group
+      group:
+        name: "{{ scoreboard_user }}"
+        state: present
+      when: not development
+
+    - name: Create scoreboard user
+      user:
+        name: "{{ scoreboard_user }}"
+        group: "{{ scoreboard_user }}"
+        state: present
+        shell: /bin/bash
+        createhome: yes
+        password_lock: yes
+      when: not development
+
+    - name: Update repositories and upgrade packages
+      apt:
+        update_cache: yes
+        upgrade: safe
+
+    - name: Install OS dependencies
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - apt-transport-https
+        - ca-certificates
+        - curl
+        - gnupg-agent
+        - gnupg
+        - lsb-release
+        - software-properties-common
+        - git
+        - autoconf
+        - bison
+        - build-essential
+        - libssl-dev
+        - libyaml-dev
+        - libreadline6-dev
+        - zlib1g-dev
+        - libncurses5-dev
+        - libffi-dev
+        - libgdbm6
+        - libgdbm-dev
+        - libdb-dev
+        - mysql-client
+        - libmysqlclient-dev
+        - nginx
+
+    - name: Add Node.js repository key
+      apt_key:
+        url: https://deb.nodesource.com/gpgkey/nodesource.gpg.key
+        state: present
+
+    - name: Add Node.js repository
+      apt_repository:
+        repo: "deb https://deb.nodesource.com/node_18.x {{ ansible_distribution_release }} main"
+        state: present
+        filename: nodesource
+
+    - name: Install Node.js
+      apt:
+        name: nodejs
+        state: present
+
+    - name: Add Yarn repository key
+      apt_key:
+        url: https://dl.yarnpkg.com/debian/pubkey.gpg
+        state: present
+
+    - name: Add Yarn repository
+      apt_repository:
+        repo: "deb https://dl.yarnpkg.com/debian/ stable main"
+        state: present
+        filename: yarn
+
+    - name: Install Yarn
+      apt:
+        name: yarn
+        state: present
+
+    - name: Remove existing Docker packages
+      apt:
+        name: "{{ item }}"
+        state: absent
+      with_items:
+        - docker-compose
+        - docker-doc
+        - podman-docker
+        - docker
+        - docker.io
+        - containerd
+        - runc
+
+    - name: Add Docker GPG key
+      apt_key:
+        url: https://download.docker.com/linux/ubuntu/gpg
+        state: present
+
+    - name: Add Docker APT repository
+      apt_repository:
+        repo: "deb https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+        state: present
+
+    - name: Install Docker
+      apt:
+        name: "{{ item }}"
+        state: present
+      with_items:
+        - docker-ce
+        - docker-ce-cli
+        - containerd.io
+        - docker-buildx-plugin
+        - docker-compose-plugin
+
+    - name: Add user to docker group
+      user:
+        name: "{{ scoreboard_user }}"
+        groups: docker
+        append: yes
+
+    - name: Create scoreboard base directory
+      file:
+        path: "{{ scoreboard_base }}/"
+        state: directory
+        owner: "{{ scoreboard_user }}"
+        mode: '0755'

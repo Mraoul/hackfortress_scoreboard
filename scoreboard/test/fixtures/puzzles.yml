@@ -1,0 +1,203 @@
+
+puzzle350:
+  description: Submit without "flag{}"
+  category: category43
+  hints: ''
+  name: RE1
+  data: "/RE1.bin"
+  solution: testsolution
+  quickdraw: false
+  fcfs: false
+  points: 100
+  unlock: 0
+  author: Heise/Jared
+  data_source: local
+  puzzlesets: puzzleset1
+
+puzzle376:
+  description: |-
+    HALO fiend, I have possesion of CVE for exploit. Plz help make fully remote code execution.
+    We shr4e bug bounty. promise :).
+  category: category43
+  hints: Google TAG
+  name: CVE_2021_31337
+  data: "/CVE-2021-31337.7z"
+  solution: testsolution
+  quickdraw: false
+  fcfs: false
+  points: 175
+  unlock: 0
+  author: Jared
+  data_source: local
+  puzzlesets: puzzleset2
+
+puzzle380:
+  description: We found some malware on our Linux machine, please do some hunting
+    and see if you can figure out anyting more of the commands they were executing....some
+    don't make sense.
+  category: category43
+  hints: Figure out which syscall to filter on. How does a meowware execute shell
+    commands?
+  name: Syscall Hunter - 1
+  data: "/evil.bin.strace"
+  solution: testsolution
+  quickdraw: false
+  fcfs: false
+  points: 100
+  unlock: 5
+  author: Jared
+  data_source: local
+  puzzlesets: puzzleset1, puzzleset2
+
+puzzle382:
+  description: This is a simple binary that takes in a password and determines if
+    it matches the hardcoded hash of a password -- the flag is the hash of the password
+  category: category43
+  hints: Rust based binary, kinda hard to reverse, need to find main entry point and
+    follow abstraction to figure out split up static string of the password hash,
+    it's split into 3 parts and put together using the format function
+  name: Hello Ruld
+  data: "/rusty"
+  solution: testsolution
+  quickdraw: false
+  fcfs: false
+  points: 125
+  unlock: 0
+  author: Murad
+  data_source: local
+  puzzlesets: puzzleset1, puzzleset3
+
+puzzle390:
+  description: 'Create and MD5 collision with the string "Shmoocon2022" (without quotes).
+    You will submit 2 files: one beginning with "Shmoocon2022" and one that does not
+    begin with "Shmoocon2022". The MD5 of both files must match.'
+  category: category43
+  hints: Hashclash identical-prefix collision
+  name: High Speed Collision
+  data: hsc.web.hackfortress.net
+  solution: testsolution
+  quickdraw: false
+  fcfs: false
+  points: 240
+  unlock: 0
+  author: Matt
+  data_source: text_only
+
+puzzle391:
+  description: What was the date this Docker image was created?(enter in format YYYY-MM-DD)
+  category: category43
+  hints: skopeo
+  name: Container Contamination
+  data: https://hub.docker.com/r/apt585/apache
+  solution: testsolution
+  quickdraw: false
+  fcfs: false
+  points: 125
+  unlock: 5
+  author: Jared
+  data_source: text_only
+
+puzzle393:
+  description: Honey buried the flag in 26 different shells!  Can you find it?
+  category: category43
+  hints: ''
+  name: Honey Forensics
+  data: "/honeyforensics.tar.gz"
+  solution: testsolution
+  quickdraw: false
+  fcfs: false
+  points: 150
+  unlock: 10
+  author: Christine
+  data_source: local
+
+puzzle394:
+  description: You need to walk before you can run
+  category: category43
+  hints: binwalk, look at the JPEG
+  name: Can You See Me?
+  data: "/can_you_see_me"
+  solution: testsolution
+  quickdraw: false
+  fcfs: false
+  points: 100
+  unlock: 0
+  author: Brandon
+  data_source: local
+
+puzzle395:
+  description: I didn't see the light until I ran the binary
+  category: category43
+  hints: The flag is encrypted until it's running.  If you do a memdump while its
+    running, you can "grep flag" and find the flag
+  name: Hiding in the Dark
+  data: "/the_darkness"
+  solution: testsolution
+  quickdraw: false
+  fcfs: false
+  points: 150
+  unlock: 0
+  author: Brandon
+  data_source: local
+
+puzzle398:
+  description: Multi-User Dungones miss out on the single user experience. Figure
+    out how to slay the monster in this 1v1 game straight from the 80s gaming magainze
+    8BIT Blaster
+  category: category43
+  hints: figure out how to beat the mosnter.
+  name: Single User Dungeon-1
+  data: "/sud-1.elf"
+  solution: testsolution
+  quickdraw: false
+  fcfs: false
+  points: 150
+  unlock: 0
+  author: Jared
+  data_source: local
+
+puzzle400:
+  description: Download the PDF and use it to generage two PDFs with the same SHA1.
+    Submit both files to the web interface. Submit to http://sha.web.hackfortress.net.
+  category: category43
+  hints: ''
+  name: SHAke==SHAre?
+  data: "/shaclash-message.pdf"
+  solution: testsolution
+  quickdraw: false
+  fcfs: false
+  points: 180
+  unlock: 0
+  author: Matt
+  data_source: local
+
+puzzle401:
+  description: 'Crack the following Linux password hash: "$1$abcd1234$rcWpY35XRheOL7nH73UZR."
+    The solution is the plaintext password.'
+  category: category43
+  hints: john --wordlist=rockyou.txt hf-pass.txt
+  name: Insecure Passwords
+  data: ''
+  solution: testsolution
+  quickdraw: false
+  fcfs: false
+  points: 100
+  unlock: 5
+  author: Matt
+  data_source: text_only
+
+
+puzzle402:
+  description: 'Crack the following Linux password hash: "$1$abcd1234$rcWpY35XRheOL7nH73UZR."
+    The solution is the plaintext password.'
+  category: category44
+  hints: john --wordlist=rockyou.txt hf-pass.txt
+  name: Insecure Passwords
+  data: ''
+  solution: testsolution
+  quickdraw: false
+  fcfs: false
+  points: 100
+  unlock: 5
+  author: Matt
+  data_source: text_only

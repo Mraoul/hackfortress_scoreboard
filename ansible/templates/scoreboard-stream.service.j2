@@ -1,0 +1,18 @@
+[Unit]
+Description=Scoreboard Sinatra Server
+PartOf=scoreboard.service
+After=scoreboard.service
+
+[Service]
+Type=simple
+User={{ scoreboard_user }}
+WorkingDirectory={{ streaming_dir }}
+ExecStart=/home/{{ scoreboard_user }}/.rbenv/bin/rbenv exec bundle exec puma -C {{ streaming_dir }}/config/puma.rb
+KillSignal=SIGINT
+StandardOutput=append:{{ scoreboard_logs_path }}/scoreboard-stream.log
+StandardError=append:{{ scoreboard_logs_path }}/scoreboard-stream.log
+TimeoutSec=15
+Restart=always
+
+[Install]
+WantedBy=scoreboard.service

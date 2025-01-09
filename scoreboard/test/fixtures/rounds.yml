@@ -1,0 +1,11 @@
+round1:
+  name: QuarterFinal1
+  puzzleset: puzzleset1
+
+round2:
+  name: SemiFinal
+  puzzleset: puzzleset2
+
+round3:
+  name: Final
+  puzzleset: puzzleset3

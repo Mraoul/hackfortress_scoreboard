@@ -1,0 +1,6 @@
+export const rootPath = '/'
+export const dashboardPath = rootPath + 'dashboard'
+export const loginPath = rootPath + 'login'
+export const logoutPath = rootPath + 'logout'
+export const puzzlesPath = rootPath + 'puzzles'
+export const hackonomyPath = rootPath + 'hackonomy'

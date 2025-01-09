@@ -1,0 +1,9 @@
+DELETE FROM mysql.user WHERE User = '';
+DELETE FROM mysql.db WHERE Db LIKE 'test%';
+CREATE DATABASE IF NOT EXISTS scoreboard_development;
+CREATE DATABASE IF NOT EXISTS scoreboard_test;
+CREATE DATABASE IF NOT EXISTS scoreboard_production;
+CREATE USER IF NOT EXISTS 'scoreboard'@'%' IDENTIFIED BY '{{ scoreboard_sql_password }}';
+GRANT ALL PRIVILEGES ON scoreboard_development.* to  'scoreboard'@'%';
+GRANT ALL PRIVILEGES ON scoreboard_test.* to 'scoreboard'@'%';
+GRANT ALL PRIVILEGES ON scoreboard_production.* to 'scoreboard'@'%';

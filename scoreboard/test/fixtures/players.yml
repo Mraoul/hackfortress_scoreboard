@@ -1,0 +1,99 @@
+player1:
+  name: "Team Effort"
+  email: "Team Email"
+  team: team1
+
+player2:
+  name: "Player 1"
+  email: "Player Email"
+  team: team1
+
+player3:
+  name: "Player 2"
+  email: "Player Email"
+  team: team1
+
+player4:
+  name: "Player 3"
+  email: "Player Email"
+  team: team1
+
+player5:
+  name: "Player 4"
+  email: "Player Email"
+  team: team1
+
+player6:
+  name: "Team Effort"
+  email: "Team Email"
+  team: team2
+
+player7:
+  name: "Player 1"
+  email: "Player Email"
+  team: team2
+
+player8:
+  name: "Player 2"
+  email: "Player Email"
+  team: team2
+
+player9:
+  name: "Player 3"
+  email: "Player Email"
+  team: team2
+
+player10:
+  name: "Player 4"
+  email: "Player Email"
+  team: team2
+
+player11:
+  name: "Team Effort"
+  email: "Team Email"
+  team: team3
+
+player12:
+  name: "Player 1"
+  email: "Player Email"
+  team: team3
+
+player13:
+  name: "Player 2"
+  email: "Player Email"
+  team: team3
+
+player14:
+  name: "Player 3"
+  email: "Player Email"
+  team: team3
+
+player15:
+  name: "Player 4"
+  email: "Player Email"
+  team: team3
+
+player16:
+  name: "Team Effort"
+  email: "Team Email"
+  team: team4
+
+player17:
+  name: "Player 1"
+  email: "Player Email"
+  team: team4
+
+player18:
+  name: "Player 2"
+  email: "Player Email"
+  team: team4
+
+player19:
+  name: "Player 3"
+  email: "Player Email"
+  team: team4
+
+player20:
+  name: "Player 4"
+  email: "Player Email"
+  team: team4

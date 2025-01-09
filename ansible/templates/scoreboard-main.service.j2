@@ -1,0 +1,19 @@
+[Unit]
+Description=Scoreboard Rails Server
+PartOf=scoreboard.service
+After=scoreboard.service
+
+[Service]
+Type=simple
+User={{ scoreboard_user }}
+KillSignal=SIGINT
+WorkingDirectory={{ scoreboard_dir }}
+EnvironmentFile=/etc/scoreboard/env
+ExecStart=/home/{{ scoreboard_user }}/.rbenv/bin/rbenv exec bundle exec puma -C {{ scoreboard_dir }}/config/puma.rb
+StandardOutput=append:{{ scoreboard_logs_path }}/scoreboard-main.log
+StandardError=append:{{ scoreboard_logs_path }}/scoreboard-main.log
+TimeoutSec=15
+Restart=always
+
+[Install]
+WantedBy=scoreboard.service

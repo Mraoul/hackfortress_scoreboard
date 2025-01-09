@@ -1,0 +1,10 @@
+
+purchase1:
+  participant: participant1
+  item: item1
+  sale_ratio: 100
+
+purchase2:
+  participant: participant1
+  item: item2
+  sale_ratio: 100

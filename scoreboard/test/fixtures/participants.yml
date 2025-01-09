@@ -1,0 +1,74 @@
+
+participant1:
+  round: round1
+  team: team1
+  hack_score: 453
+  bonus_score: 48
+  tf2_score: 3
+  hackcoins: 1002
+  dominate: false
+  hints: 0
+  tf2coins: 1257
+  color: "red"
+
+participant2:
+  round: round1
+  team: team2
+  hack_score: 180
+  bonus_score: 15
+  tf2_score: 0
+  hackcoins: 0
+  dominate: false
+  hints: 0
+  tf2coins: 195
+  color: "blue"
+
+
+participant3:
+  round: round2
+  team: team3
+  hack_score: 0
+  bonus_score: 0
+  tf2_score: 0
+  hackcoins: 0
+  dominate: false
+  hints: 0
+  tf2coins: 0
+  color: "red"
+
+participant4:
+  round: round2
+  team: team4
+  hack_score: 0
+  bonus_score: 0
+  tf2_score: 0
+  hackcoins: 0
+  dominate: false
+  hints: 0
+  tf2coins: 0
+  color: "blue"
+
+participant5:
+  round: round3
+  team:
+  hack_score: 0
+  bonus_score: 0
+  tf2_score: 0
+  hackcoins: 0
+  dominate: false
+  hints: 0
+  tf2coins: 0
+  color: "red"
+
+participant6:
+  round: round3
+  team:
+  hack_score: 0
+  bonus_score: 0
+  tf2_score: 0
+  hackcoins: 0
+  dominate: false
+  hints: 0
+  tf2coins: 0
+  color: "blue"
+

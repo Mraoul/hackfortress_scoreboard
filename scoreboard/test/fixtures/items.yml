@@ -1,0 +1,59 @@
+
+item1:
+  name: Light Slap
+  cost: 10
+  description: Light Slap Damage (10-30 HP)
+  discountable: true
+  item_group: item_group1
+  modifier: 20
+  players: 6
+  argument: 10
+  starting_quantity: 9999
+  friendly_text: 'Slap'
+  effect_iden: 'Slap'
+  is_buff: false
+
+
+item2:
+  name: Medium Slap
+  cost: 20
+  description: Medium Slap Damage (30-40 HP)
+  discountable: false
+  item_group: item_group1
+  modifier: 10
+  players: 6
+  argument: 30
+  starting_quantity: 9999
+  friendly_text: 'Slap'
+  effect_iden: 'Slap'
+  is_buff: false
+
+
+item20:
+  name: Single Hint
+  cost: 15
+  description: A single hint
+  discountable: true
+  item_group: item_group10
+  modifier: 0
+  players: 0
+  argument: 1
+  starting_quantity: 9999
+  friendly_text: 'Small Hint'
+  effect_iden: 'hint_add'
+  is_buff: true
+
+
+item21:
+  name: Hint Value Pack
+  cost: 65
+  description: A 5-pack of hints
+  discountable: false
+  item_group: item_group10
+  modifier: 0
+  players: 0
+  argument: 5
+  starting_quantity: 9999
+  friendly_text: 'Big Hint'
+  effect_iden: 'hint_add'
+  is_buff: true

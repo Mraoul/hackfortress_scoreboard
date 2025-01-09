@@ -1,0 +1,118 @@
+upstream puma_scoreboard {
+    server unix:{{ scoreboard_dir }}/shared/sockets/puma.sock fail_timeout=0;
+}
+
+upstream puma_scoreboard_stream {
+    server unix:{{ streaming_dir }}/shared/sockets/puma.sock fail_timeout=0;
+}
+
+server {
+    listen 80;
+    server_name localhost;
+    root {{ scoreboard_dir }}/public;
+    error_page 403 =301 https://$host$request_uri;
+
+    allow all;
+    #deny all;
+
+    try_files $uri/index.html $uri @puma_scoreboard;
+
+    location /nginx_status {
+        # Turn on stats
+        stub_status on;
+        access_log   off;
+        # only allow access from 192.168
+        # allow 192.168.0.0/16;
+        # deny all;
+    }
+
+    location /stream {
+        proxy_pass http://puma_scoreboard_stream;
+        #proxy_buffering off;
+        proxy_cache off;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        #proxy_redirect off;
+        proxy_set_header Connection '';
+        proxy_http_version 1.1;
+        chunked_transfer_encoding off;
+    }
+
+    location @puma_scoreboard {
+        proxy_pass http://puma_scoreboard;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+        proxy_set_header Host $http_host;
+        proxy_redirect off;
+        #
+        #proxy_buffering off;
+        #proxy_http_version 1.1;
+        #proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+        #chunked_transfer_encoding off;
+    }
+
+    # Proxy webpack dev server websocket requests
+    # location /sockjs-node {
+    #     proxy_redirect off;
+    #     proxy_http_version 1.1;
+    #     proxy_set_header Upgrade $http_upgrade;
+    #     proxy_set_header Connection "upgrade";
+    #     proxy_pass http://127.0.0.1:3035; # change to match your webpack-dev-server host
+    #     allow 10.0.0.0/16; # change to match dev network
+    #     deny all;
+    # }
+
+    error_page 500 502 503 504 /500.html;
+    client_max_body_size 4G;
+    keepalive_timeout 10;
+}
+
+## HTTPS Configuration ##
+# server {
+#     ## This section auto-redirects to https/443
+#     listen 80 default_server;
+#     server_name _;
+#     return 301 https://$host$request_uri;
+# }
+#
+# server {
+#     listen 443 ssl;
+#     server_name localhost;
+#     root {{ scoreboard_dir }}/public;
+#     error_page 403 =301 https://$host$request_uri;
+#
+#     ssl_certificate /etc/ssl/certs/server.pem;
+#     ssl_certificate_key /etc/ssl/private/server.key;
+#
+#     try_files $uri/index.html $uri @puma_scoreboard;
+#
+#     location /stream {
+#         proxy_pass http://puma_scoreboard_stream;
+#         proxy_buffering off;
+#         proxy_cache off;
+#         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header Host $http_host;
+#         #proxy_redirect off;
+#         proxy_set_header Connection '';
+#         proxy_http_version 1.1;
+#         chunked_transfer_encoding off;
+#         #proxy_set_header Content-Type text/event-stream;
+#         #proxy_set_header Cache-Control no-cache;
+#         #proxy_set_header X-Accel-Buffering no;
+#     }
+#
+#     location @puma_scoreboard {
+#         proxy_pass http://puma_scoreboard;
+#         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header Host $http_host;
+#         proxy_redirect off;
+#         #
+#         proxy_buffering off;
+#         proxy_http_version 1.1;
+#         proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
+#         chunked_transfer_encoding off;
+#     }
+#
+#     error_page 500 502 503 504 /500.html;
+#     client_max_body_size 4G;
+#     keepalive_timeout 10;
+# }

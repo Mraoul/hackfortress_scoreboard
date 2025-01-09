@@ -1,0 +1,20 @@
+# Set to 'true' operate in development mode which will setup a local
+# RabbitMQ server. When set to false, an external rabbit server is expected
+# Development mode will also not create a user, expecting the below scoreboard_user
+# to already exist
+development: false
+
+# The user that will be used to operate the scoreboard. In development this should be
+# set to your user. In prod, you can leave this as is and it will create the
+# user (and group)
+scoreboard_user: "scoreboard"
+
+# The base directory for all scoreboard related items. This is where
+# folders will be made to store info for the dependencies, and where logs will be stored
+# Further you will clone the project into a directory in this directory
+scoreboard_base: "/opt/scoreboard-base"
+
+# This is the cloned repo directory name that is expected. So, if you're using the
+# default scoreboard_base value, you should have a `/opt/scoreboard-base/hackfortress_scoreborad`
+# directory which contains the scoreboard source/repo
+scoreboard_directory: "hackfortress_scoreboard"

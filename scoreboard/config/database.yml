@@ -1,0 +1,21 @@
+common: &common
+  adapter: mysql2
+  encoding: utf8
+  host: 127.0.0.1
+  username: scoreboard
+  password: <%= Rails.application.credentials.dig(Rails.env.to_sym, :db_password) %>
+  pool: 50
+  wait_timeout: 2147483
+
+
+development:
+  <<: *common
+  database: scoreboard_development
+
+test:
+  <<: *common
+  database: scoreboard_test
+
+production:
+  <<: *common
+  database: scoreboard_production

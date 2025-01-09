@@ -1,0 +1,14 @@
+
+item_group1:
+  name: Slap
+  description: Damage for the entire opposing team
+  picture_location: slap.jpg
+  discountable: true
+  hack_item: false
+
+item_group10:
+  name: Hack Hint
+  description: Need a Hint on a Puzzle?
+  picture_location: hint.jpg
+  discountable: false
+  hack_item: true

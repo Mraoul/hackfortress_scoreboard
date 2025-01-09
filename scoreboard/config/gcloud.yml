@@ -1,0 +1,13 @@
+common: &common
+  project_id: "gcp project_id"
+  bucket: "gcp bucket"
+  credentials: <%= Rails.root.join('path', 'to', 'hackfortress.json') %>
+
+development:
+  <<: *common
+
+test:
+  <<: *common
+
+production:
+  <<: *common

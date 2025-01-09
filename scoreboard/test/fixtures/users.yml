@@ -1,0 +1,48 @@
+user1:
+  username: admin
+  # 'password'
+  password: 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
+  team_id:
+  role: admin
+
+user2:
+  username: team1
+  password: 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
+  team: team1
+  role: contestant
+
+user3:
+  username: team2
+  password: 22a6970c6491c5dec88d8fe815a6fcc6dbc0226d
+  team: team2
+  role: contestant
+
+user4:
+  username: team3
+  password: 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
+  team: team3
+  role: contestant
+
+user5:
+  username: team4
+  password: 1153e8df71a5e7d8912f1e03c0357aac193dd31d
+  team: team4
+  role: contestant
+
+user6:
+  username: team5
+  password: 0263d1bb4cee575b0e5b54f3d7eca4fc6651af2c
+  team: team5
+  role: contestant
+
+user7:
+  username: team6
+  password: 5ca1cd4ce40a31894abab5e6c2f4263639984424
+  team: team6
+  role: contestant
+
+judge:
+  username: judge
+  password: 5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8
+  team_id:
+  role: judge

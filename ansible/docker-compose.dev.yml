@@ -1,0 +1,42 @@
+services:
+    redis:
+        image: redis:7
+        ports:
+            - "127.0.0.1:6379:6379"
+        command: redis-server --appendonly yes
+        restart: unless-stopped
+        volumes:
+            - type: volume
+              source: scoreboard-redis
+              target: /data
+    mysql:
+        image: mysql:8
+        ports:
+            - "127.0.0.1:3306:3306"
+        restart: unless-stopped
+        environment:
+            - "MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}"
+        volumes:
+            - type: volume
+              source: scoreboard-mysql
+              target: /var/lib/mysql
+    rabbitmq:
+        image: rabbitmq:management
+        ports:
+            - "15672:15672"
+            - "5672:5672"
+        hostname: wolfmother
+        restart: unless-stopped
+        environment:
+            - "HOSTNAME=wolfmother"
+            - "RABBITMQ_NODENAME=tinybunny"
+        volumes:
+            - type: volume
+              source: scoreboard-rabbit
+              target: /var/lib/rabbitmq
+
+
+volumes:
+    scoreboard-redis:
+    scoreboard-mysql:
+    scoreboard-rabbit:
